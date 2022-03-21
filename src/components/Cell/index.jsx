@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import { TETRIMINOS } from '../../helpers/tetrimonios'
 
-export default function Cell({ type = 'L' }) {
+export default memo(function Cell({ type = 'L' }) {
    return (
       <div
          style={{
@@ -13,4 +14,4 @@ export default function Cell({ type = 'L' }) {
          }}
       />
    )
-}
+})

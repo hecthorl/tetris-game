@@ -8,12 +8,15 @@ import usePlayer from '../../hooks/usePlayer'
 import createStage from '../../helpers/createStage'
 import checkCollision from '../../helpers/checkCollision'
 import useInterval from '../../hooks/useInterval'
+import useGameStatus from '../../hooks/useGameStatus'
 
 export default function Tetris() {
    const [dropTime, setDropTime] = useState(null)
    const [gameOver, setGameOver] = useState(false)
    const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer()
-   const [stage, setStage] = useStage(player, resetPlayer)
+   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer)
+   const { level, rows, score, setLevel, setRows, setScore } =
+      useGameStatus(rowsCleared)
 
    const movePlayer = dir => {
       if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -26,8 +29,15 @@ export default function Tetris() {
       resetPlayer()
       setGameOver(false)
       setDropTime(1000)
+      setScore(0)
+      setLevel(0)
+      setRows(0)
    }
    const drop = () => {
+      if (rows > (level + 1) * 10) {
+         setLevel(prev => prev + 1)
+         setDropTime(1000 / (level + 1) + 200)
+      }
       if (!checkCollision(player, stage, { x: 0, y: 1 })) {
          updatePlayerPos({ x: 0, y: 1, collided: false })
       } else {
@@ -39,9 +49,16 @@ export default function Tetris() {
          updatePlayerPos({ x: 0, y: 0, collided: !false })
       }
    }
+
+   const keyUp = ({ keyCode }) => {
+      if (gameOver) {
+         if (keyCode === 40) setDropTime(1e3)
+      }
+   }
+
    const dropPlayer = () => {
       drop()
-      setDropTime(null)
+      // setDropTime(null)
    }
    const move = ({ keyCode }) => {
       // console.log(keyCode)
@@ -52,7 +69,6 @@ export default function Tetris() {
             movePlayer(1)
          } else if (keyCode === 40) {
             dropPlayer()
-            console.log('sadd')
          } else if (keyCode === 38) {
             playerRotate(stage, 1)
          }
@@ -67,6 +83,7 @@ export default function Tetris() {
          role="button"
          tabIndex="0"
          onKeyDown={e => move(e)}
+         onKeyUp={keyUp}
       >
          <main>
             <Stage stage={stage} />
@@ -75,9 +92,9 @@ export default function Tetris() {
                   <Display gameOver={gameOver} text="Game Over" />
                ) : (
                   <div>
-                     <Display gameOver={gameOver} text="Score" />
-                     <Display gameOver={gameOver} text="Rows" />
-                     <Display gameOver={gameOver} text="Level" />
+                     <Display gameOver={gameOver} text={`Level ${level}`} />
+                     <Display gameOver={gameOver} text={`Score ${score}`} />
+                     <Display gameOver={gameOver} text={`Rows ${rows}`} />
                   </div>
                )}
 
