@@ -1,0 +1,16 @@
+.start-btn {
+   margin: 0 0 20px 0;
+   padding: 20px;
+   min-height: 30px;
+   width: 100%;
+   border-radius: 20px;
+   border: none;
+   cursor: pointer;
+   color: white;
+   background-color: #333;
+   transition: background-color 0.2s ease;
+}
+
+.start-btn:hover {
+   background-color: rgb(96, 121, 84);
+}

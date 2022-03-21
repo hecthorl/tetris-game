@@ -1,24 +1,60 @@
 {
-  "name": "tetris-no-canvas",
-  "private": true,
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^1.0.7",
-    "eslint": "^7.32.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.2.0",
-    "eslint-plugin-react": "^7.29.4",
-    "vite": "^2.8.0"
-  }
+   "name": "tetris-no-canvas",
+   "private": true,
+   "version": "0.0.0",
+   "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "preview": "vite preview"
+   },
+   "dependencies": {
+      "react": "17.0.2",
+      "react-dom": "17.0.2"
+   },
+   "devDependencies": {
+      "@vitejs/plugin-react": "^1.0.7",
+      "eslint": "^7.32.0",
+      "eslint-config-standard": "^16.0.3",
+      "eslint-plugin-import": "^2.25.4",
+      "eslint-plugin-node": "^11.1.0",
+      "eslint-plugin-promise": "^5.2.0",
+      "eslint-plugin-react": "^7.29.4",
+      "vite": "^2.8.0"
+   },
+   "eslintConfig": {
+      "env": {
+         "browser": true,
+         "es2021": true,
+         "node": true
+      },
+      "extends": [
+         "plugin:react/recommended",
+         "standard"
+      ],
+      "parserOptions": {
+         "ecmaFeatures": {
+            "jsx": true
+         },
+         "ecmaVersion": "latest",
+         "sourceType": "module"
+      },
+      "plugins": [
+         "react"
+      ],
+      "rules": {
+         "react/react-in-jsx-scope": "off",
+         "react/prop-types": "off",
+         "indent": "off",
+         "space-before-function-paren": "off",
+         "no-unused-vars": "warn",
+         "multiline-ternary": "off"
+      }
+   },
+   "prettier": {
+      "semi": false,
+      "singleQuote": true,
+      "trailingComma": "none",
+      "tabWidth": 3,
+      "arrowParens": "avoid"
+   }
 }
