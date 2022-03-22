@@ -37,6 +37,7 @@ export default function usePlayer() {
 
       const pos = clonedPlayer.pos.x
       let offSet = 1
+
       while (checkCollision(clonedPlayer, stage, { x: 0, y: 0 })) {
          clonedPlayer.pos.x += offSet
          offSet = -(offSet + (offSet > 0 ? 1 : -1))

@@ -27,12 +27,11 @@ export default function useStage(player, resetPlayer) {
          // Then draw the tetrimonio
          player.tetrimonio.forEach((row, y) => {
             row.forEach((value, x) => {
-               if (value !== 0) {
-                  newStage[y + player.pos.y][x + player.pos.x] = [
-                     value,
-                     `${player.collided ? 'merged' : 'clear'}`
-                  ]
-               }
+               if (value === 0) return
+               newStage[y + player.pos.y][x + player.pos.x] = [
+                  value,
+                  `${player.collided ? 'merged' : 'clear'}`
+               ]
             })
          })
          // Then check if we got some score if collided

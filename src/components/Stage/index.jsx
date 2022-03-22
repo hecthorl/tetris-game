@@ -1,7 +1,13 @@
 import Cell from '../Cell'
 import './index.css'
 
-export default function Stage({ stage = [] }) {
+/**
+ * Componente-matriz del Tetris
+ * @param {object} props Props
+ * @param {Array<Array>} props.stage
+ * @returns {JSX.Element} Retorna una matriz en display grid
+ */
+export default function Stage({ stage }) {
    return (
       <div
          className="stage-container"
@@ -11,7 +17,7 @@ export default function Stage({ stage = [] }) {
          }}
       >
          {stage.map(row =>
-            row.map((cell, x) => <Cell key={x} type={cell[0]} />)
+            row.map((cell, i) => <Cell key={i} type={cell[0]} />)
          )}
       </div>
    )

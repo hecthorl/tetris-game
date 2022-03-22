@@ -62,17 +62,15 @@ export default function Tetris() {
    }
    const move = ({ keyCode }) => {
       // console.log(keyCode)
-      if (!gameOver) {
-         if (keyCode === 37) {
-            movePlayer(-1)
-         } else if (keyCode === 39) {
-            movePlayer(1)
-         } else if (keyCode === 40) {
-            dropPlayer()
-         } else if (keyCode === 38) {
-            playerRotate(stage, 1)
-         }
+      if (gameOver) return
+
+      const KEY_CODES = {
+         37: () => movePlayer(-1),
+         39: () => movePlayer(1),
+         38: () => playerRotate(stage, 1),
+         40: () => dropPlayer()
       }
+      KEY_CODES[keyCode]()
    }
 
    useInterval(drop, dropTime)
@@ -82,14 +80,20 @@ export default function Tetris() {
          className="tetris-container"
          role="button"
          tabIndex="0"
-         onKeyDown={e => move(e)}
+         onKeyDown={move}
          onKeyUp={keyUp}
       >
          <main>
             <Stage stage={stage} />
             <aside>
                {gameOver ? (
-                  <Display gameOver={gameOver} text="Game Over" />
+                  <>
+                     <Display gameOver={gameOver} text="Game Over" />
+                     <Display
+                        gameOver={gameOver}
+                        text={`Final Score ${score}`}
+                     />
+                  </>
                ) : (
                   <div>
                      <Display gameOver={gameOver} text={`Level ${level}`} />
