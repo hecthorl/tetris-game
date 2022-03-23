@@ -13,6 +13,7 @@ import useGameStatus from '../../hooks/useGameStatus'
 export default function Tetris() {
    const [dropTime, setDropTime] = useState(null)
    const [gameOver, setGameOver] = useState(false)
+   const [pause, setPause] = useState(false)
    const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer()
    const [stage, setStage, rowsCleared] = useStage(player, resetPlayer)
    const { level, rows, score, setLevel, setRows, setScore } =
@@ -33,6 +34,13 @@ export default function Tetris() {
       setLevel(0)
       setRows(0)
    }
+
+   const pauseGame = () => {
+      setDropTime(pause ? 1e90 : 1e3)
+      console.log('wut')
+      setPause(prev => !prev)
+   }
+
    const drop = () => {
       if (rows > (level + 1) * 10) {
          setLevel(prev => prev + 1)
@@ -51,9 +59,7 @@ export default function Tetris() {
    }
 
    const keyUp = ({ keyCode }) => {
-      if (gameOver) {
-         if (keyCode === 40) setDropTime(1e3)
-      }
+      if (keyCode === 40 && gameOver) setDropTime(1e3)
    }
 
    const dropPlayer = () => {
@@ -64,13 +70,17 @@ export default function Tetris() {
       // console.log(keyCode)
       if (gameOver) return
 
-      const KEY_CODES = {
-         37: () => movePlayer(-1),
-         39: () => movePlayer(1),
-         38: () => playerRotate(stage, 1),
-         40: () => dropPlayer()
+      try {
+         const KEY_CODES = {
+            37: () => movePlayer(-1),
+            39: () => movePlayer(1),
+            38: () => playerRotate(stage, 1),
+            40: () => dropPlayer()
+         }
+         KEY_CODES[keyCode]()
+      } catch (err) {
+         // console.log(error)
       }
-      KEY_CODES[keyCode]()
    }
 
    useInterval(drop, dropTime)
@@ -101,8 +111,8 @@ export default function Tetris() {
                      <Display gameOver={gameOver} text={`Rows ${rows}`} />
                   </div>
                )}
-
-               <StartBtn onClick={startGame} />
+               <button onClick={pauseGame}>Pause</button>
+               <StartBtn onClick={startGame}>Start Game</StartBtn>
             </aside>
          </main>
       </div>

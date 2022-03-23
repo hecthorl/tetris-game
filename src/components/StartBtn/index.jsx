@@ -1,9 +1,9 @@
 import './index.css'
 
-export default function StartBtn({ onClick }) {
+export default function StartBtn({ onClick, children }) {
    return (
       <button onClick={onClick} className="start-btn">
-         Start Game
+         {children}
       </button>
    )
 }
