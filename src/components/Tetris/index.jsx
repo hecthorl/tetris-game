@@ -1,14 +1,14 @@
+import { useState } from 'react'
 import useStage from '../../hooks/useStage'
-import { useState, useRef } from 'react'
+import useInterval from '../../hooks/useInterval'
+import useGameStatus from '../../hooks/useGameStatus'
+import usePlayer from '../../hooks/usePlayer'
+import createStage from '../../helpers/createStage'
+import checkCollision from '../../helpers/checkCollision'
 import Display from '../Display'
 import Stage from '../Stage'
 import StartBtn from '../StartBtn'
 import './index.css'
-import usePlayer from '../../hooks/usePlayer'
-import createStage from '../../helpers/createStage'
-import checkCollision from '../../helpers/checkCollision'
-import useInterval from '../../hooks/useInterval'
-import useGameStatus from '../../hooks/useGameStatus'
 
 export default function Tetris() {
    const [dropTime, setDropTime] = useState(null)
@@ -18,7 +18,6 @@ export default function Tetris() {
    const [stage, setStage, rowsCleared] = useStage(player, resetPlayer)
    const { level, rows, score, setLevel, setRows, setScore } =
       useGameStatus(rowsCleared)
-   const timeRef = useRef(dropTime)
 
    const movePlayer = dir => {
       if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -35,10 +34,8 @@ export default function Tetris() {
       setLevel(0)
       setRows(0)
    }
-   timeRef.current = dropTime
+
    const pauseGame = () => {
-      // setDropTime(pause ? null : timeRef.current)
-      console.log(timeRef.current)
       setPause(prev => !prev)
    }
 
@@ -60,12 +57,12 @@ export default function Tetris() {
    }
 
    const keyUp = ({ keyCode }) => {
-      if (keyCode === 40 && gameOver) setDropTime(1e3)
+      if (keyCode === 40 && !gameOver) setDropTime(1e3 / (level + 1))
    }
 
    const dropPlayer = () => {
+      setDropTime(null)
       drop()
-      // setDropTime(null)
    }
    const move = ({ keyCode }) => {
       // console.log(keyCode)
@@ -73,17 +70,17 @@ export default function Tetris() {
 
       try {
          const KEY_CODES = {
-            37: () => movePlayer(-1),
-            39: () => movePlayer(1),
-            38: () => playerRotate(stage, 1),
-            40: () => dropPlayer()
+            37: () => movePlayer(-1), // arrow left⬅
+            39: () => movePlayer(1), // arrow right ➡
+            38: () => playerRotate(stage, 1), // arrow up ⬆
+            40: () => dropPlayer() // arrow down ⬇
          }
          KEY_CODES[keyCode]()
       } catch (err) {
          // console.log(error)
       }
    }
-   // console.log({ dropTime })
+
    useInterval(drop, pause ? null : dropTime)
 
    return (
@@ -112,8 +109,14 @@ export default function Tetris() {
                      <Display gameOver={gameOver} text={`Rows ${rows}`} />
                   </div>
                )}
-               <button onClick={pauseGame}>Pause</button>
-               <StartBtn onClick={startGame}>Start Game</StartBtn>
+               <div className="btns-container">
+                  {gameOver || (
+                     <button onClick={pauseGame}>
+                        {pause ? 'Start' : 'Pause'}
+                     </button>
+                  )}
+                  <StartBtn onClick={startGame}>Restart</StartBtn>
+               </div>
             </aside>
          </main>
       </div>
