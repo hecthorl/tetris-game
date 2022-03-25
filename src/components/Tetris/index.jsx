@@ -1,5 +1,5 @@
 import useStage from '../../hooks/useStage'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Display from '../Display'
 import Stage from '../Stage'
 import StartBtn from '../StartBtn'
@@ -18,6 +18,7 @@ export default function Tetris() {
    const [stage, setStage, rowsCleared] = useStage(player, resetPlayer)
    const { level, rows, score, setLevel, setRows, setScore } =
       useGameStatus(rowsCleared)
+   const timeRef = useRef(dropTime)
 
    const movePlayer = dir => {
       if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -34,10 +35,10 @@ export default function Tetris() {
       setLevel(0)
       setRows(0)
    }
-
+   timeRef.current = dropTime
    const pauseGame = () => {
-      setDropTime(pause ? 1e90 : 1e3)
-      console.log('wut')
+      // setDropTime(pause ? null : timeRef.current)
+      console.log(timeRef.current)
       setPause(prev => !prev)
    }
 
@@ -82,15 +83,15 @@ export default function Tetris() {
          // console.log(error)
       }
    }
-
-   useInterval(drop, dropTime)
+   // console.log({ dropTime })
+   useInterval(drop, pause ? null : dropTime)
 
    return (
       <div
          className="tetris-container"
          role="button"
          tabIndex="0"
-         onKeyDown={move}
+         onKeyDown={pause ? () => {} : move}
          onKeyUp={keyUp}
       >
          <main>
